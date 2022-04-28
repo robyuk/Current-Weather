@@ -14,6 +14,8 @@ def getWeather(cityname, apiKey=getenv('apiKey')):
     print(f"HTML code {result} was returned")
     print(content['message'])
     exit(1)
+  else:  ## Debug check cityname matches that requested
+    assert cityname.split(',')[0] == content['city']['name']
     
   forcasts=content['list']
   return forcasts
