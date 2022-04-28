@@ -12,6 +12,7 @@ def getWeather(cityname, apiKey=getenv('apiKey')):
   result=content['cod']
   if not result == '200':
     print(f"HTML code {result} was returned")
+    print(content['message'])
     exit(1)
     
   forcasts=content['list']
