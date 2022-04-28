@@ -1,16 +1,34 @@
 import requests
+from os import getenv
+# Get 5-day weather forcast for {city} and append to data.txt file
+city='Boston,uk'
 
-def getNews(country, apiKey='034e0474006b4cc6b67c8809ee9d8ba2'):
-  url=f'https://newsapi.org/v2/top-headlines?country={country}&apiKey={apiKey}'
+# Get API key by signing up at openweathermap.org
+def getWeather(cityname, apiKey=getenv('apiKey')):
+  url=f'https://api.openweathermap.org/data/2.5/forecast?q={cityname}&appid={apiKey}&units=metric'
   r=requests.get(url)
   content=r.json()
-  articles=content['articles']
-  return articles
+  
+  result=content['cod']
+  if not result == '200':
+    print(f"HTML code {result} was returned")
+    exit(1)
+    
+  forcasts=content['list']
+  return forcasts
               
-articles=getNews(country='gb')
-results=[]
-for article in articles:
-  print(f"TITLE: '{article['title']}\nDESCRIPTION: {article['description']}")
+forcasts=getWeather(cityname=city)
+f=open('data.txt','a')
+  
+city=city.split(',')[0]  #Get just the city name
+for forcast in forcasts:
+  temp=forcast['main']['temp']
+  dt=forcast['dt_txt']
+  condition=forcast['weather'][0]['description']
+  f.write(f"{city}, {dt}, {temp}, {condition}\n")
+
+f.close()
+
 
 
 #print(getNews(topic='space',fromDate='2022-4-12',toDate='2022-4-13'))
